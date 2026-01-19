@@ -6,20 +6,19 @@ Ticket de compra: calcula coste por producto y total general.
 PRICES: dict[str, float] = {"Pan": 1.40, "Huevos": 2.30, "Cebolla": 0.85, "Aceite": 4.35}
 
 def checkout(cart: list[tuple[str, int]]) -> tuple[dict[str, float], float]:
-    """
-    Recibe un carrito como lista de tuplas (producto, unidades).
+    product_totals: dict[str, float] = {}
 
-    Devuelve:
-    - Un diccionario con el coste por producto (producto -> coste)
-    - Un float con el total general
+    for product, units in cart:
+        if units < 0:
+            raise ValueError(f"Cantidad negativa no permitida: {product} ({units})")
+        if product not in PRICES:
+            raise ValueError(f"Producto desconocido: {product}")
 
-    Reglas:
-    - Si units < 0 -> ValueError
-    - Si un producto no existe en PRICES -> ValueError
-    - Si un producto aparece varias veces, se acumulan unidades
+        cost = PRICES[product] * units
+        product_totals[product] = product_totals.get(product, 0) + cost
 
-    Ejemplo:
-    [("Pan", 2), ("Huevos", 1), ("Pan", 1)] ->
-      ({"Pan": 4.2, "Huevos": 2.3}, 6.5)
-    """
-    raise NotImplementedError("Implementa checkout(cart)")
+    product_totals = {p: round(c, 2) for p, c in product_totals.items()}
+
+    total_general = round(sum(product_totals.values()), 2)
+
+    return product_totals, total_general
