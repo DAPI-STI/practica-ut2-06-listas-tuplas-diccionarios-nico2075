@@ -13,4 +13,10 @@ def best_student(records: list[tuple[str, float]]) -> tuple[str, float]:
     Ejemplo:
     [("Ana", 7.5), ("Luis", 9.0), ("Marta", 8.0)] -> ("Luis", 9.0)
     """
-    raise NotImplementedError("Implementa best_student(records)")
+    if not records:
+        raise ValueError("La lista 'records' no puede estar vacía.")
+
+    # max() con key para comparar por nota (índice 1 de cada tupla)
+    mejor = max(records, key=lambda record: record[1])
+
+    return mejor
